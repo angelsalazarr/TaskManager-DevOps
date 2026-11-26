@@ -127,6 +127,25 @@ def create_app(config=None):
         fila = db.execute("SELECT * FROM tareas WHERE id = ?", (cur.lastrowid,)).fetchone()
         return jsonify(fila_a_dict(fila)), 201
 
+    # RF03 + RF05 + RF06 - Editar tarea, cambiar estado y prioridad
+    @app.put("/api/tareas/<int:tarea_id>")
+    def editar(tarea_id):
+        db = get_db()
+        if db.execute("SELECT 1 FROM tareas WHERE id = ?", (tarea_id,)).fetchone() is None:
+            return jsonify({"error": "Tarea no encontrada."}), 404
+        datos, error = validar(request.get_json(silent=True), parcial=True)
+        if error:
+            return jsonify({"error": error}), 400
+        if not datos:
+            return jsonify({"error": "No hay datos para actualizar."}), 400
+        campos = ", ".join(f"{c} = ?" for c in datos)
+        db.execute(
+            f"UPDATE tareas SET {campos} WHERE id = ?", (*datos.values(), tarea_id)
+        )
+        db.commit()
+        fila = db.execute("SELECT * FROM tareas WHERE id = ?", (tarea_id,)).fetchone()
+        return jsonify(fila_a_dict(fila))
+
     return app
 
 
