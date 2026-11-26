@@ -46,6 +46,7 @@ function render() {
           ${estados.map((e) => `<option ${e === t.estado ? "selected" : ""}>${e}</option>`).join("")}
         </select>
         <button data-id="${t.id}" class="editar secundario">Editar</button>
+        <button data-id="${t.id}" class="eliminar peligro">Eliminar</button>
       </div>`;
     ul.appendChild(li);
   }
@@ -107,7 +108,16 @@ $("lista-tareas").addEventListener("change", async (ev) => {
 $("lista-tareas").addEventListener("click", async (ev) => {
   const id = ev.target.dataset.id;
   if (!id) return;
-  if (ev.target.classList.contains("editar")) {
+  if (ev.target.classList.contains("eliminar")) {
+    if (!confirm("¿Eliminar esta tarea?")) return;
+    try {
+      await peticion(`${API}/${id}`, { method: "DELETE" });
+      mostrarMensaje("Tarea eliminada.", "ok");
+      await cargar();
+    } catch (e) {
+      mostrarMensaje(e.message, "error");
+    }
+  } else if (ev.target.classList.contains("editar")) {
     const t = tareas.find((x) => String(x.id) === id);
     $("tarea-id").value = t.id;
     $("nombre").value = t.nombre;

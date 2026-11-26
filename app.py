@@ -146,6 +146,16 @@ def create_app(config=None):
         fila = db.execute("SELECT * FROM tareas WHERE id = ?", (tarea_id,)).fetchone()
         return jsonify(fila_a_dict(fila))
 
+    # RF04 - Eliminar tareas
+    @app.delete("/api/tareas/<int:tarea_id>")
+    def eliminar(tarea_id):
+        db = get_db()
+        cur = db.execute("DELETE FROM tareas WHERE id = ?", (tarea_id,))
+        db.commit()
+        if cur.rowcount == 0:
+            return jsonify({"error": "Tarea no encontrada."}), 404
+        return jsonify({"mensaje": "Tarea eliminada."})
+
     return app
 
 
