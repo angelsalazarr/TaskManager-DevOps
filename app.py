@@ -89,6 +89,8 @@ def create_app(config=None):
     @app.get("/api/tareas")
     def listar():
         estado = request.args.get("estado")
+        if estado and estado not in ESTADOS:
+            return jsonify({"error": "Estado inválido. Use: " + ", ".join(ESTADOS) + "."}), 400
         db = get_db()
         if estado:
             filas = db.execute(
