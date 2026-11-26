@@ -107,6 +107,17 @@ def test_editar_sin_datos(client):
     assert client.put("/api/tareas/1", json={}).status_code == 400
 
 
+# CP05 / RF04
+def test_cp05_eliminar_tarea(client):
+    crear(client)
+    assert client.delete("/api/tareas/1").status_code == 200
+    assert client.get("/api/tareas").get_json() == []
+
+
+def test_eliminar_inexistente(client):
+    assert client.delete("/api/tareas/9").status_code == 404
+
+
 # CP06 / RF05
 @pytest.mark.parametrize("estado", ["Pendiente", "En proceso", "Terminada"])
 def test_cp06_cambiar_estado(client, estado):
