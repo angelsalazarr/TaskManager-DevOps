@@ -40,7 +40,13 @@ function render() {
     li.innerHTML = `
       <div class="titulo">${escapar(t.nombre)}</div>
       <div class="meta">Prioridad: ${t.prioridad} · Estado: ${t.estado}</div>
-      <div>${escapar(t.descripcion || "")}</div>`;
+      <div>${escapar(t.descripcion || "")}</div>
+      <div class="tarea-acciones">
+        <select data-id="${t.id}" class="cambiar-estado" aria-label="Cambiar estado">
+          ${estados.map((e) => `<option ${e === t.estado ? "selected" : ""}>${e}</option>`).join("")}
+        </select>
+        <button data-id="${t.id}" class="editar secundario">Editar</button>
+      </div>`;
     ul.appendChild(li);
   }
 }
@@ -82,5 +88,36 @@ $("btn-cancelar").addEventListener("click", () => {
 });
 
 $("filtro-estado").addEventListener("change", cargar);
+
+$("lista-tareas").addEventListener("change", async (ev) => {
+  if (!ev.target.classList.contains("cambiar-estado")) return;
+  try {
+    await peticion(`${API}/${ev.target.dataset.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ estado: ev.target.value }),
+    });
+    mostrarMensaje("Estado actualizado.", "ok");
+    await cargar();
+  } catch (e) {
+    mostrarMensaje(e.message, "error");
+  }
+});
+
+$("lista-tareas").addEventListener("click", async (ev) => {
+  const id = ev.target.dataset.id;
+  if (!id) return;
+  if (ev.target.classList.contains("editar")) {
+    const t = tareas.find((x) => String(x.id) === id);
+    $("tarea-id").value = t.id;
+    $("nombre").value = t.nombre;
+    $("descripcion").value = t.descripcion;
+    $("prioridad").value = t.prioridad;
+    $("estado").value = t.estado;
+    $("form-titulo").textContent = "Editar tarea";
+    $("btn-cancelar").hidden = false;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+});
 
 cargar();

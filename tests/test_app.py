@@ -84,6 +84,43 @@ def test_filtrar_por_estado(client):
     assert len(lista) == 1 and lista[0]["nombre"] == "B"
 
 
+# CP04 / RF03
+def test_cp04_editar_tarea(client):
+    crear(client)
+    resp = client.put("/api/tareas/1", json={"nombre": "Nuevo nombre", "descripcion": "Nueva"})
+    assert resp.status_code == 200
+    assert resp.get_json()["nombre"] == "Nuevo nombre"
+    assert resp.get_json()["descripcion"] == "Nueva"
+
+
+def test_editar_inexistente(client):
+    assert client.put("/api/tareas/5", json={"nombre": "X"}).status_code == 404
+
+
+def test_editar_nombre_vacio(client):
+    crear(client)
+    assert client.put("/api/tareas/1", json={"nombre": ""}).status_code == 400
+
+
+def test_editar_sin_datos(client):
+    crear(client)
+    assert client.put("/api/tareas/1", json={}).status_code == 400
+
+
+# CP06 / RF05
+@pytest.mark.parametrize("estado", ["Pendiente", "En proceso", "Terminada"])
+def test_cp06_cambiar_estado(client, estado):
+    crear(client)
+    resp = client.put("/api/tareas/1", json={"estado": estado})
+    assert resp.status_code == 200
+    assert resp.get_json()["estado"] == estado
+
+
+def test_estado_invalido(client):
+    crear(client)
+    assert client.put("/api/tareas/1", json={"estado": "Cancelada"}).status_code == 400
+
+
 # CP07 / RF06
 @pytest.mark.parametrize("prioridad", ["Alta", "Media", "Baja"])
 def test_cp07_seleccionar_prioridad(client, prioridad):
