@@ -146,3 +146,10 @@ def test_prioridad_invalida(client):
 def test_prioridad_por_defecto(client):
     resp = client.post("/api/tareas", json={"nombre": "Sin prioridad"})
     assert resp.get_json()["prioridad"] == "Media"
+
+
+# CP08
+def test_cp08_filtro_estado_invalido(client):
+    resp = client.get("/api/tareas?estado=Cancelada")
+    assert resp.status_code == 400
+    assert "inválido" in resp.get_json()["error"]
