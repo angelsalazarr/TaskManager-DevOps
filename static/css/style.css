@@ -1,0 +1,32 @@
+* { box-sizing: border-box; }
+body { font-family: "Segoe UI", Arial, sans-serif; margin: 0; background: #f3f4f6; color: #1f2937; }
+header { background: #1e3a8a; color: #fff; padding: 20px 24px; }
+header h1 { margin: 0; font-size: 26px; }
+header p { margin: 4px 0 0; opacity: .85; }
+main { max-width: 900px; margin: 24px auto; padding: 0 16px; display: grid; gap: 20px; }
+.card { background: #fff; border-radius: 10px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+.card h2 { margin-top: 0; }
+label { display: block; font-weight: 600; margin-bottom: 12px; font-size: 14px; }
+input[type=text], textarea, select { width: 100%; margin-top: 4px; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font: inherit; }
+.fila { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.acciones { display: flex; gap: 8px; }
+button { background: #2563eb; color: #fff; border: 0; padding: 9px 16px; border-radius: 6px; cursor: pointer; font: inherit; }
+button:hover { background: #1d4ed8; }
+button.secundario { background: #6b7280; }
+button.peligro { background: #dc2626; }
+.encabezado-lista { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.encabezado-lista select { width: auto; }
+#lista-tareas { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.tarea { border: 1px solid #e5e7eb; border-left: 5px solid #9ca3af; border-radius: 8px; padding: 12px; }
+.tarea.Alta { border-left-color: #dc2626; }
+.tarea.Media { border-left-color: #f59e0b; }
+.tarea.Baja { border-left-color: #16a34a; }
+.tarea.Terminada .titulo { text-decoration: line-through; color: #6b7280; }
+.titulo { font-weight: 700; }
+.meta { font-size: 13px; color: #4b5563; margin: 4px 0 8px; }
+.tarea-acciones { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.tarea-acciones select { width: auto; margin: 0; }
+#mensaje { min-height: 20px; margin: 10px 0 0; font-size: 14px; }
+#mensaje.ok { color: #15803d; }
+#mensaje.error { color: #b91c1c; }
+@media (max-width: 600px) { .fila { grid-template-columns: 1fr; } }
